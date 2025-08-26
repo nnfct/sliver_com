@@ -1,0 +1,31 @@
+[project]
+name = "somomeet-backend"
+version = "0.1.0"
+description = "MVP FastAPI backend for So-Momeet"
+authors = [{ name = "Team", email = "team@example.com" }]
+requires-python = ">=3.11"
+readme = "README.md"
+dependencies = [
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+  "sqlalchemy>=2.0.0",
+  "psycopg2-binary>=2.9.0",
+  "python-multipart>=0.0.9",
+  "pydantic>=2.6.0",
+  "python-jose[cryptography]>=3.3.0",
+  "httpx>=0.27.0",
+]
+
+[project.scripts]
+somomeet-api = "app.main:run"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2.0",
+  "ruff>=0.5.0",
+  "black>=24.0.0",
+  "mypy>=1.10.0",
+]
+
+[tool.uv]
+index-url = "https://pypi.org/simple"
