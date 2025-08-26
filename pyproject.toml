@@ -1,7 +1,9 @@
 [project]
-name = ".silver.com"
+name = "sliver_com"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastapi>=0.116.1",
+]
