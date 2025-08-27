@@ -33,34 +33,43 @@
 ```
 so-momeet/
 ├── backend/              # FastAPI + SQLAlchemy + Alembic
-├── admin/                # Django Admin (운영도구)
-├── mobile/               # React Native 앱
+├── web/                  # Next.js (사용자 웹 + 경량 Admin)
+├── admin-retool/         # (선택) Retool 구성/스크립트 백업
+├── mobile/               # React Native 앱 (Expo 권장)
 ├── docs/                 # 아키텍처/결정 기록
 └── .env.example          # 공통 환경 변수 샘플(루트)
 ```
 
 ## 4) 백엔드(FastAPI) 부트스트랩
-- 핵심 모듈
-  - 인증: AD B2C OIDC(JWT 검증) → `/auth/me`
-  - 사용자/프로필/태그: CRUD + 스키마 확정
-  - 추천 v0: 태그 유사도 기반 엔드포인트
-  - 소모임/게시/댓글: 최소 CRUD
-  - 채팅: ACS 토큰 발급 엔드포인트(`/chat/token`)
+- 핵심 모듈(필수 Must 중심)
+  - 회원가입/로그인
+    - 소셜(OIDC: Google/카카오/Apple) + 이메일 가입/로그인 옵션
+    - `/auth/me` 사용자 정보, 리프레시/만료 처리
+  - 프로필/설정
+    - 프로필 사진, 닉네임, 인증(신원), 취미 태그, 주소, 알림/푸시 설정
+  - 추천 v0
+    - 태그 유사도 기반 추천 엔드포인트(`/recommend/users`, `/recommend/groups`)
+  - 소모임/게시/댓글/일정
+    - 그룹/멤버십, 게시글/댓글 CRUD, 일정(RSVP: 참석/미정/불참 인원 카운트)
+  - 채팅
+    - ACS 토큰 발급(`/chat/token`), 1:1 채널 발급, 모임별 채널 키 관리
 - 마이그레이션
   - Alembic 초기 스키마(users, profiles, tags, groups, posts, comments)
 - 품질 게이트
   - pytest 스모크, ruff/black, mypy 옵션
 
-## 5) 관리자(Django Admin)
-- 같은 DB(PostgreSQL) 사용, 핵심 모델 등록
-- 스태프 권한·감사 로그 미들웨어 설정(기본)
+## 5) 웹/경량 Admin(Next.js/Retool)
+- Next.js 기반 운영 뷰(대시보드·회원/모임/콘텐츠 목록)
+- Retool 대체/보완(운영자가 빠르게 테이블/폼 구성)
+- 같은 DB(PostgreSQL) 사용, 권한·감사 로그는 API 레벨 감사 테이블로 관리
 
 ## 6) 모바일 앱(RN)
-- 로그인 플로우: AD B2C(OIDC) WebView/Redirect
-- 온보딩: 관심사 선택, 프로필 저장
-- 피드/글쓰기/댓글(이미지 업로드는 Blob SAS URL)
-- DM: 백엔드에서 발급받은 ACS 토큰으로 1:1 채널 연결
-- 접근성 토글: 폰트 스케일 3단, 고대비 모드
+- 로그인/가입: AD B2C(OIDC) + 이메일(옵션) 플로우
+- 온보딩: 관심사 선택, 프로필(사진/닉네임/주소/알림) 저장
+- 피드/게시판: 글쓰기/수정/삭제, 댓글, 이미지 업로드(SAS URL)
+- 소모임: 생성/가입/탈퇴/강제탈퇴, 옵션(운영진/연령대) 편집, 일정 RSVP
+- 채팅: 1:1 DM + 모임 채팅(텍스트 우선), 읽음/기본 알림
+- 접근성: 폰트 스케일 3단, 고대비 모드, 포커스 이동
 
 ## 7) 인프라/보안(요약)
 - Azure AD B2C, PostgreSQL(Flexible), Blob, ACS, App Insights
@@ -73,21 +82,23 @@ so-momeet/
 
 ## 9) W1~W2 착수 플랜(체크리스트)
 - W1 Day1–2
-  - [ ] AD B2C 테넌트/앱 등록/정책, 리다이렉트 URI 확정
+  - [ ] AD B2C 테넌트/앱 등록/정책, 리다이렉트 URI 확정(구글/카카오/애플)
   - [ ] Azure PostgreSQL/Blob/ACS/App Insights 리소스 생성
-  - [ ] 백엔드 스켈레톤 + Alembic init, `/health`, `/auth/me`
-  - [ ] 모바일 템플릿, 로그인 화면 틀, 접근성 토글
+  - [ ] 백엔드 스켈레톤 + Alembic init, `/health`, `/auth/me`(이메일 옵션 설계)
+  - [ ] 모바일 템플릿, 로그인/가입 화면 틀, 접근성 토글
 - W1 Day3–5
-  - [ ] users/profiles/tags 스키마/엔드포인트
-  - [ ] 그룹/게시/댓글 CRUD 초안, 이미지 업로드 경로
-  - [ ] Django Admin 부트스트랩/모델 등록
+  - [ ] users/profiles/tags 스키마/엔드포인트(알림 설정 포함)
+  - [ ] 그룹/게시/댓글/일정(RSVP) CRUD 초안, 이미지 업로드 경로
+  - [ ] 웹(Next.js) 운영 레이아웃/대시보드 베이스
   - [ ] CI: Lint/Test/Build 파이프라인
 - W2
-  - [ ] 추천 v0 API + 홈 피드 연동
-  - [ ] DM 토큰 발급 + 기본 송수신(테스트 채널)
+  - [ ] 추천 v0 API + 홈 피드 연동(사용자/모임)
+  - [ ] DM 토큰 발급 + 기본 송수신(테스트 채널) + 모임 채팅 토큰 발급
   - [ ] 신고/차단 API 스텁(Feature Flag)
 
 ## 10) 수용 기준(초기)
-- API: `/health` 200, `/auth/me` 토큰 검증, 기본 CRUD 200/201
-- 앱: 로그인→온보딩 저장→피드 렌더→게시/댓글 성공
-- 채팅: 1:1 텍스트 송수신(이미지 링크는 Blob 업로드 후 URL)
+- 회원가입/로그인: 소셜 3종(구글/카카오/애플) 중 2종 이상 통합, `/auth/me` 응답 OK
+- 프로필: 사진/닉네임/인증/취미/주소/알림 설정 저장·재로그인 후 유지
+- 소모임: 생성/가입/탈퇴/강제탈퇴, 게시글 CRUD, 댓글, 일정 RSVP 카운트 표기
+- 채팅/쪽지: 1:1 송수신/읽음, 모임 채널 기본 송수신(텍스트)
+- 추천 v0: 취미 태그 유사도 기반 추천이 홈 피드에 노출

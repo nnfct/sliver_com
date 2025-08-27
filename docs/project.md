@@ -15,14 +15,29 @@
 
 ## 2) MVP 범위 (MoSCoW)
 - Must
-  - 간편 가입/로그인: OAuth2/OIDC 소셜 로그인(Azure AD B2C)
-  - 내 프로필과 취미 태그 관리
-  - 관심사 기반 친구 추천(기본 버전)
-  - 소모임 개설 및 참여
-  - 1:1 채팅 및 쪽지: Azure Communication Services
-  - 기본 관리자 페이지: Django Admin
+  - 회원가입/로그인
+    - 소셜 로그인: Google/카카오/Apple (Azure AD B2C OIDC)
+    - 이메일 가입/로그인(마법링크 또는 비밀번호 기반 중 택1)
+  - 프로필 관리
+    - 필수 필드: 프로필 사진, 닉네임, 인증(신원), 취미, 주소
+    - 환경설정: 커뮤니티 알림/푸시 설정(수신 동의, 카테고리별 온/오프)
+  - 소모임
+    - 게시판: 글 작성/수정/삭제, 댓글, 이미지 업로드
+    - 멤버십: 모임 생성/가입/탈퇴/강제탈퇴(운영진 권한)
+    - 옵션: 운영진(관리자) 설정, 모임 연령대 등 메타데이터 설정
+    - 채널: 모임별 채팅(텍스트 우선)
+    - 일정: 일정 생성/참석/참여자 수 관리(RSVP)
+  - 채팅/쪽지
+    - 1:1 실시간 채팅(읽음/기본 알림)
+  - 추천(기본)
+    - 취미 태그 기반 사용자/모임 추천 v0
+  - 관리자 페이지(경량 Admin)
+    - Next.js Admin 또는 Retool 기반 기본 운영 기능(회원/모임/콘텐츠)
 - Should
-  - AI 대화 시작 도우미(Feature Flag 관리)
+  - AI 보조 기능(Feature Flag)
+    - AI 3줄 요약
+    - AI 글쓰기 도우미
+    - 취미 기반 자동 태그 제안
   - 오프라인 모임 지원(일자/장소)
   - 사용자 신고 및 차단
 - Could
@@ -40,9 +55,10 @@
 - 핵심 여정: 가입 → 프로필/관심사 → 추천 확인 → 소모임 참여 → 1:1 대화 → 오프라인 만남
 
 ## 4) 기술 아키텍처 & 스택
-- 모바일 앱: React Native(TypeScript)
+- 모바일 앱: React Native(Expo, TypeScript)
+- 웹: Next.js(React)
 - API 서버: FastAPI(Python)
-- 관리자: Django Admin(Python)
+- 관리자(경량 Admin): Next.js Admin 또는 Retool
 - 데이터베이스: PostgreSQL(+ PostGIS 추후 고려)
 - 실시간 채팅: Azure Communication Services
 - 인증: Azure AD B2C(OAuth2/OIDC)
