@@ -1,0 +1,91 @@
+{
+  "name": "sliver_com",
+  "version": "0.1.0",
+  "private": true,
+  "description": "시니어 소모임 플랫폼 - 모든 의존성 통합",
+  "scripts": {
+    "dev": "concurrently \"yarn dev:api\" \"yarn dev:web\" \"yarn dev:mobile\"",
+    "dev:api": "cd apps/api && uv run uvicorn app.main:app --reload",
+    "dev:web": "cd apps/web && next dev -p 3000",
+    "dev:mobile": "cd apps/mobile && expo start",
+    "build": "yarn build:web && yarn build:mobile",
+    "build:web": "cd apps/web && next build",
+    "build:mobile": "cd apps/mobile && expo build",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx && cd apps/api && uv run ruff check .",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf node_modules apps/*/node_modules"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^14.0.0",
+    "@hookform/resolvers": "^3.3.0",
+    "@radix-ui/react-dialog": "^1.0.0",
+    "@radix-ui/react-dropdown-menu": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.0",
+    "@radix-ui/react-toast": "^1.1.0",
+    "@react-navigation/bottom-tabs": "^6.5.0",
+    "@react-navigation/native": "^6.1.0",
+    "@react-navigation/stack": "^6.3.0",
+    "@tailwindcss/forms": "^0.5.0",
+    "@tailwindcss/typography": "^0.5.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.0",
+    "axios": "^1.6.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "date-fns": "^2.30.0",
+    "expo": "~51.0.0",
+    "expo-font": "~12.0.0",
+    "expo-image-picker": "~15.0.0",
+    "expo-linking": "~6.3.0",
+    "expo-location": "~17.0.0",
+    "expo-notifications": "~0.28.0",
+    "expo-router": "~3.5.0",
+    "expo-splash-screen": "~0.27.0",
+    "expo-status-bar": "~1.12.1",
+    "expo-system-ui": "~3.0.0",
+    "expo-web-browser": "~13.0.0",
+    "lucide-react": "^0.294.0",
+    "next": "^14.0.0",
+    "postcss": "^8.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.0",
+    "react-native": "0.74.5",
+    "react-native-gesture-handler": "~2.16.0",
+    "react-native-reanimated": "~3.10.0",
+    "react-native-safe-area-context": "4.10.5",
+    "react-native-screens": "~3.31.0",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5.0.0",
+    "zod": "^3.22.0",
+    "zustand": "^4.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@openapitools/openapi-generator-cli": "^2.7.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "concurrently": "^8.2.0",
+    "eslint": "^8.0.0",
+    "eslint-config-expo": "^7.0.0",
+    "eslint-config-next": "^14.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.0.0",
+    "prettier-plugin-tailwindcss": "^0.5.0"
+  },
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=22.18.0",
+    "yarn": ">=1.22.22"
+  },
+  "expo": {
+    "install": {
+      "exclude": [
+        "react-native-safe-area-context"
+      ]
+    }
+  }
+}
